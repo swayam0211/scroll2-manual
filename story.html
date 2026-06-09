@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RYŪJIN — The Untold Chronicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="story.css">
+</head>
+
+<body>
+
+    <!-- Cinematic Letterbox -->
+    <div class="letterbox top"></div>
+    <div class="letterbox bottom"></div>
+
+    <!-- Background Environment -->
+    <div class="environment">
+        <div class="fog-overlay"></div>
+        <div class="mountain-silhouette"></div>
+        <div class="ash-particles" id="ash-canvas-container">
+            <canvas id="ash-canvas"></canvas>
+        </div>
+        <div class="film-grain"></div>
+        <div class="vignette"></div>
+        <div class="top-light"></div>
+        <div class="matte-floor">
+            <div class="floor-reflection"></div>
+        </div>
+    </div>
+
+    <!-- Main Experience Container -->
+    <main class="story-viewport" id="story-viewport">
+        <div class="cards-wrapper" id="cards-wrapper">
+            <!-- Cards will be injected by story.js or hardcoded if small enough -->
+
+            <!-- Card 1 — The Omen -->
+            <div class="card" data-index="0">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme1.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Omen</p>
+                        <h2 class="card-title">The Omen</h2>
+                        <div class="card-body">
+                            <p>Before the dragons returned,</p>
+                            <p>the sky forgot its color.</p>
+                            <p>For a hundred years, the mountains slept beneath ash,</p>
+                            <p>and the sea held its breath.</p>
+                            <p>The elders spoke of wings made of storm</p>
+                            <p>and eyes that burned like fallen stars.</p>
+                            <p>But no one believed them.</p>
+                            <p>Until the wind changed.</p>
+                        </div>
+                    </div>
+                    <div class="ember-crack"></div>
+                </div>
+            </div>
+
+            <!-- Card 2 — The Warrior Without a Name -->
+            <div class="card" data-index="1">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 2.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Warrior</p>
+                        <h2 class="card-title">The Warrior Without a Name</h2>
+                        <div class="card-body">
+                            <p>He walked where no shadow dared to follow.</p>
+                            <p>Bound by an oath signed in blood and steel.</p>
+                            <p>A ghost in the mist, a blade in the dark.</p>
+                        </div>
+                    </div>
+                    <div class="red-line"></div>
+                </div>
+            </div>
+
+            <!-- Card 3 — The First Descent -->
+            <div class="card" data-index="2">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 4.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Descent</p>
+                        <h2 class="card-title">The First Descent</h2>
+                        <div class="card-body">
+                            <p>When the sky split open,</p>
+                            <p>it didn't rain water.</p>
+                            <p>It rained fire and scale.</p>
+                            <p>The first shadow to fall was the largest.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 — Fire and Steel -->
+            <div class="card" data-index="3">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 5.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Clash</p>
+                        <h2 class="card-title">Fire and Steel</h2>
+                        <div class="card-body">
+                            <p>Steel tempered in the heart of a dying star.</p>
+                            <p>Fire that burns even the memory of cold.</p>
+                            <p>The song of the blade is the only prayer left.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 — The Truth Beneath the Flame -->
+            <div class="card" data-index="4">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 3.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Truth</p>
+                        <h2 class="card-title">The Truth Beneath the Flame</h2>
+                        <div class="card-body">
+                            <p>The flame doesn't just destroy.</p>
+                            <p>It reveals what remains.</p>
+                            <p>In the ashes of fear, we found our strength.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 — The Breaking of Fear -->
+            <div class="card" data-index="5">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 6.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Breaking</p>
+                        <h2 class="card-title">The Breaking of Fear</h2>
+                        <div class="card-body">
+                            <p>Fear is the heaviest chain.</p>
+                            <p>Break it, and you will finally fly.</p>
+                            <p>The dawn is coming, even if the sun is gone.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7 — The Ember Pact -->
+            <div class="card" data-index="6">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme1.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Centerpiece</p>
+                        <h2 class="card-title">The Ember Pact</h2>
+                        <div class="card-body">
+                            <p>A promise made in the silence between heartbeats.</p>
+                            <p>Ancient and unbreakable.</p>
+                            <p>Blood for fire. Soul for light.</p>
+                        </div>
+                    </div>
+                    <div class="glowing-orb"></div>
+                </div>
+            </div>
+
+            <!-- Card 8 — The Sky Remembers -->
+            <div class="card" data-index="7">
+                <div class="card-inner">
+                    <div class="card-bg" style="background-image: url('photo_theme 6.png');"></div>
+                    <div class="card-content">
+                        <p class="card-label">The Finality</p>
+                        <h2 class="card-title">The Sky Remembers</h2>
+                        <div class="card-body">
+                            <p>When the storm fades,</p>
+                            <p>the sky remains.</p>
+                            <p>Forever watching. Forever silent.</p>
+                            <p>The chronicles end, but the myth begins.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="story.js"></script>
+</body>
+
+</html>

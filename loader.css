@@ -1,0 +1,258 @@
+/* ═══════════════════════════════════════════════════════
+   ZEN-TECH LOADING SCREEN — Cinematic 2D Rotating Cards
+   Deep charcoal, sumi-e ink, minimalist precision.
+   ═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300&display=swap');
+
+/* ── Loader Overlay ── */
+.zen-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #0f0f0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    opacity: 1;
+    transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+}
+
+.zen-loader.done {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Grain overlay for loader */
+.zen-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: screen;
+}
+
+/* ── Central Assembly ── */
+.zen-core {
+    position: relative;
+    width: 480px;
+    height: 480px;
+    z-index: 2;
+}
+
+/* ── 16-Dot Inner Ring ── */
+.zen-dots {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+}
+
+.zen-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: background 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zen-dot.lit {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.40),
+        0 0 22px rgba(255, 255, 255, 0.15),
+        0 0 44px rgba(255, 255, 255, 0.06);
+    transform: translate(-50%, -50%) scale(1.3);
+}
+
+/* ── 8-Card Outer Gallery Ring ── */
+.zen-gallery {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transition: transform 3.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zen-card {
+    position: absolute;
+    width: 100px;
+    height: 140px;
+    top: 50%;
+    left: 50%;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: #1a1a1a;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.50);
+}
+
+.zen-card.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.60),
+        0 2px 8px rgba(0, 0, 0, 0.30);
+}
+
+.zen-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.85) contrast(1.15) brightness(0.85);
+    transition: filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zen-card.visible img {
+    filter: grayscale(0.65) contrast(1.10) brightness(0.92);
+}
+
+/* ── Center Mark ── */
+.zen-center-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.zen-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 42px;
+    font-weight: 200;
+    color: rgba(255, 255, 255, 0.06);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    transition: color 1.8s cubic-bezier(0.22, 1, 0.36, 1),
+        text-shadow 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zen-kanji.reveal {
+    color: rgba(255, 255, 255, 0.70);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+}
+
+.zen-brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.52em;
+    color: rgba(255, 255, 255, 0);
+    text-transform: uppercase;
+    transition: color 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+
+.zen-brand.reveal {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+/* ── Progress Bar ── */
+.zen-progress-wrap {
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.zen-progress-track {
+    width: 160px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 1px;
+    overflow: hidden;
+}
+
+.zen-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.52));
+    border-radius: 1px;
+    transition: width 0.15s linear;
+}
+
+.zen-pct {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.20em;
+    color: rgba(255, 255, 255, 0.28);
+    min-width: 28px;
+    text-align: right;
+}
+
+/* ── Tagline ── */
+.zen-tagline {
+    z-index: 2;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 11px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.38em;
+    color: rgba(255, 255, 255, 0);
+    transition: color 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.zen-tagline.reveal {
+    color: rgba(255, 255, 255, 0.24);
+}
+
+/* ── Body locked during load ── */
+body.loading {
+    overflow: hidden !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .zen-core {
+        width: 320px;
+        height: 320px;
+    }
+
+    .zen-card {
+        width: 68px;
+        height: 95px;
+    }
+
+    .zen-kanji {
+        font-size: 30px;
+    }
+
+    .zen-brand {
+        font-size: 9px;
+        letter-spacing: 0.40em;
+    }
+
+    .zen-progress-track {
+        width: 110px;
+    }
+}
+
+@media (max-width: 400px) {
+    .zen-core {
+        width: 260px;
+        height: 260px;
+    }
+
+    .zen-card {
+        width: 56px;
+        height: 78px;
+    }
+}

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RYŪJIN Chronicles — A cinematic scroll art installation." />
+    <meta name="theme-color" content="#0b0f19" />
+    <title>RYŪJIN — Myth in Motion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300&family=Inter:wght@200;300;400&display=swap"
+        rel="stylesheet" />
+    <link rel="preload" as="image" href="photo_theme1.png" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="loader.css" />
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════
+         LANDING PAGE
+         ═══════════════════════════════════════════ -->
+    <div id="landing-page" class="landing-page" aria-label="Welcome">
+        <!-- Background Video -->
+        <video id="landing-video" class="landing-video" autoplay loop muted playsinline>
+            <source src="visiter page/sumvid.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Subtle dark gradient overlay & film grain -->
+        <div class="landing-overlay" aria-hidden="true"></div>
+        <canvas id="landing-grain" class="landing-grain" aria-hidden="true"></canvas>
+
+        <div class="landing-content">
+            <h1 class="landing-title">THE LAST EMBER<br>OF THE SKY</h1>
+            <p class="landing-meta">A Mythical Fantasy Chronicle<br>Warrior • Dragon • Balance • Judgment</p>
+            <button id="enter-btn" class="landing-enter-btn">Enter the Chronicle</button>
+        </div>
+
+        <!-- Scroll Indicator (Bottom Center) -->
+        <div class="landing-scroll-indicator" id="landing-scroll">
+            <div class="landing-scroll-track">
+                <div class="landing-scroll-dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ZEN-TECH LOADING SCREEN
+         ═══════════════════════════════════════════ -->
+    <div id="zen-loader" class="zen-loader" aria-label="Loading">
+        <!-- Noise grain overlay for loader -->
+        <canvas id="zen-grain" class="zen-grain" aria-hidden="true"></canvas>
+
+        <!-- Central content wrapper -->
+        <div class="zen-core">
+            <!-- 16-dot inner ring -->
+            <div class="zen-dots" id="zen-dots"></div>
+
+            <!-- 8-card outer gallery ring -->
+            <div class="zen-gallery" id="zen-gallery"></div>
+
+            <!-- Center kanji / brand mark -->
+            <div class="zen-center-mark">
+                <span class="zen-kanji">龍</span>
+                <span class="zen-brand">RYŪJIN</span>
+            </div>
+        </div>
+
+        <!-- Progress bar + percentage -->
+        <div class="zen-progress-wrap">
+            <div class="zen-progress-track">
+                <div class="zen-progress-bar" id="zen-bar"></div>
+            </div>
+            <span class="zen-pct" id="zen-pct">0</span>
+        </div>
+
+        <!-- Subtle tagline -->
+        <p class="zen-tagline">Myth in Motion</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         CINEMATIC CLOUD REVEAL
+         ═══════════════════════════════════════════ -->
+    <div id="cloud-reveal" class="cloud-reveal" aria-hidden="true">
+        <div class="cloud-bg-color"></div>
+        <div class="cloud-light-beam"></div>
+        <canvas id="cloud-dust" class="cloud-dust"></canvas>
+
+        <!-- Deep Background Layers (Move Slowest) -->
+        <div class="cloud-layer layer-bg layer-left">
+            <div class="cloud-img" style="background-image: url('cloud/cloud1.png');"></div>
+        </div>
+        <div class="cloud-layer layer-bg layer-right">
+            <div class="cloud-img" style="background-image: url('cloud/cloud2.png');"></div>
+        </div>
+
+        <!-- Mid Layers -->
+        <div class="cloud-layer layer-mid layer-left">
+            <div class="cloud-img" style="background-image: url('cloud/cloud3.png');"></div>
+        </div>
+        <div class="cloud-layer layer-mid layer-right">
+            <div class="cloud-img" style="background-image: url('cloud/cloud4.png');"></div>
+        </div>
+
+        <!-- Foreground Layers (Move Fastest) -->
+        <div class="cloud-layer layer-fg layer-left">
+            <div class="cloud-img" style="background-image: url('cloud/cloud5.png');"></div>
+        </div>
+        <div class="cloud-layer layer-fg layer-right">
+            <div class="cloud-img" style="background-image: url('cloud/cloud1.png'); transform: scaleX(-1);"></div>
+        </div>
+    </div>
+
+    <!-- Film grain overlay -->
+    <canvas id="grain-canvas" aria-hidden="true"></canvas>
+    <!-- Velocity ambient light -->
+    <div id="ambient-light" aria-hidden="true"></div>
+
+    <!-- Sound toggle -->
+    <button id="sound-toggle" aria-label="Toggle ambient sound">
+        <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
+        <svg id="icon-sound" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        </svg>
+    </button>
+
+    <!-- ══════════════════════════════════════════
+       SECTION 1+2 — HERO + SLICE REVEAL (UNIFIED)
+       Starts at top of page so sticky pin = scrollY 0
+       ══════════════════════════════════════════ -->
+    <section id="s-slice" class="s s--slice" aria-label="Hero and slice reveal">
+
+        <!-- The sticky viewport — pins while parent scrolls -->
+        <div class="slice-sticky" id="slice-sticky">
+
+            <!-- LAYER 0: Reveal image (dragon) — beneath slices -->
+            <div class="slice-reveal" id="slice-reveal" aria-hidden="true">
+                <img src="photo_theme 2.png" alt="Three dragons with burning crimson eyes" loading="eager"
+                    decoding="async" />
+                <div class="slice-reveal-fade" aria-hidden="true"></div>
+                <!-- Subtle red eye glow -->
+                <div class="eye-glow" id="eye-glow" aria-hidden="true"></div>
+            </div>
+
+            <!-- LAYER 1: Slices of hero image (JS-generated) -->
+            <div class="slice-wrap" id="slice-wrap" aria-hidden="true">
+                <!-- 5 slice pieces injected by main.js -->
+                <!-- Hidden hero img for JS to read src from -->
+                <img id="hero-img" src="photo_theme1.png" alt="" aria-hidden="true" loading="eager" fetchpriority="high"
+                    style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;" />
+            </div>
+
+            <!-- LAYER 2: Hero title text (fades out as slices open) -->
+            <div class="hero-overlay" id="hero-overlay">
+                <div class="hero-text">
+                    <p class="label label--hero">An Epic Unfolds</p>
+                    <h1 class="hero-title">
+                        <span class="hero-title__line hero-title__line--1">RYŪJIN</span>
+                        <span class="hero-title__line hero-title__line--2">Chronicles</span>
+                    </h1>
+                    <p class="hero-sub">One blade. Three shadows. An eternity of silence.</p>
+                </div>
+            </div>
+
+            <!-- Scroll indicator (bottom center) -->
+            <div class="scroll-indicator" id="scroll-indicator">
+                <div class="scroll-track">
+                    <div class="scroll-dot"></div>
+                </div>
+                <span class="scroll-label-text">scroll</span>
+            </div>
+
+            <!-- LAYER 3: Act I text (fades in when dragon revealed) -->
+            <div class="slice-text" id="slice-text">
+                <div class="bg-word bg-word--slice" aria-hidden="true">AWAKENING</div>
+                <div class="slice-text__inner">
+                    <p class="label slice-label" id="slice-label">Act I — The Awakening</p>
+                    <h2 class="section-title" id="slice-heading">
+                        <span class="word-wrap"><span class="word">From</span></span>
+                        <span class="word-wrap"><span class="word">the</span></span>
+                        <span class="word-wrap"><span class="word">Mist,</span></span>
+                        <br />
+                        <span class="word-wrap"><em class="word">They</em></span>
+                        <span class="word-wrap"><em class="word">Rise.</em></span>
+                    </h2>
+                    <p class="section-body slice-body" id="slice-body">Ancient beyond memory, the dragons emerged from
+                        the veil between worlds — their eyes burning with a fury older than mountains.</p>
+                    <div class="micro-line" id="slice-micro"></div>
+                </div>
+            </div>
+
+            <!-- Curated vertical divider lines -->
+            <div class="vert-dividers" aria-hidden="true">
+                <div class="vd vd--l"></div>
+                <div class="vd vd--r"></div>
+            </div>
+
+        </div>
+        <!-- /slice-sticky -->
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+       SECTION 2.5 — THE STORY CARDS
+       Floating 3D curved experience
+       ══════════════════════════════════════════ -->
+    <section id="s-story" class="s s--story" aria-label="The Untold Chronicles">
+        <!-- Atmosphere container for this section -->
+        <div class="story-env">
+            <div class="story-fog"></div>
+            <div class="story-ash" id="story-ash-container">
+                <canvas id="story-ash-canvas"></canvas>
+            </div>
+            <div class="story-vignette"></div>
+            <div class="story-light"></div>
+            <div class="story-floor">
+                <div class="story-floor-reflection"></div>
+            </div>
+        </div>
+
+        <div class="story-sticky">
+            <div class="story-viewport" id="story-viewport">
+                <div class="story-cards-wrapper" id="story-cards-wrapper">
+                    <!-- Card 1 — The Omen -->
+                    <div class="story-card" data-index="0">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme1.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Omen</p>
+                                <h2 class="story-card-title">The Omen</h2>
+                                <div class="story-card-body">
+                                    <p>Before the dragons returned,</p>
+                                    <p>the sky forgot its color.</p>
+                                    <p>For a hundred years, the mountains slept beneath ash,</p>
+                                    <p>and the sea held its breath.</p>
+                                    <p>The elders spoke of wings made of storm</p>
+                                    <p>and eyes that burned like fallen stars.</p>
+                                    <p>But no one believed them.</p>
+                                    <p>Until the wind changed.</p>
+                                </div>
+                            </div>
+                            <div class="story-ember-crack"></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 — The Warrior Without a Name -->
+                    <div class="story-card" data-index="1">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 2.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Warrior</p>
+                                <h2 class="story-card-title">The Warrior Without a Name</h2>
+                                <div class="story-card-body">
+                                    <p>He walked where no shadow dared to follow.</p>
+                                    <p>Bound by an oath signed in blood and steel.</p>
+                                    <p>A ghost in the mist, a blade in the dark.</p>
+                                </div>
+                            </div>
+                            <div class="story-red-line"></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 — The First Descent -->
+                    <div class="story-card" data-index="2">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 4.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Descent</p>
+                                <h2 class="story-card-title">The First Descent</h2>
+                                <div class="story-card-body">
+                                    <p>When the sky split open,</p>
+                                    <p>it didn't rain water.</p>
+                                    <p>It rained fire and scale.</p>
+                                    <p>The first shadow to fall was the largest.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 — Fire and Steel -->
+                    <div class="story-card" data-index="3">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 5.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Clash</p>
+                                <h2 class="story-card-title">Fire and Steel</h2>
+                                <div class="story-card-body">
+                                    <p>Steel tempered in the heart of a dying star.</p>
+                                    <p>Fire that burns even the memory of cold.</p>
+                                    <p>The song of the blade is the only prayer left.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 — The Truth Beneath the Flame -->
+                    <div class="story-card" data-index="4">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 3.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Truth</p>
+                                <h2 class="story-card-title">The Truth Beneath the Flame</h2>
+                                <div class="story-card-body">
+                                    <p>The flame doesn't just destroy.</p>
+                                    <p>It reveals what remains.</p>
+                                    <p>In the ashes of fear, we found our strength.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 — The Breaking of Fear -->
+                    <div class="story-card" data-index="5">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 6.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Breaking</p>
+                                <h2 class="story-card-title">The Breaking of Fear</h2>
+                                <div class="story-card-body">
+                                    <p>Fear is the heaviest chain.</p>
+                                    <p>Break it, and you will finally fly.</p>
+                                    <p>The dawn is coming, even if the sun is gone.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 7 — The Ember Pact -->
+                    <div class="story-card" data-index="6">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme1.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Centerpiece</p>
+                                <h2 class="story-card-title">The Ember Pact</h2>
+                                <div class="story-card-body">
+                                    <p>A promise made in the silence between heartbeats.</p>
+                                    <p>Ancient and unbreakable.</p>
+                                    <p>Blood for fire. Soul for light.</p>
+                                </div>
+                            </div>
+                            <div class="story-glowing-orb"></div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8 — The Sky Remembers -->
+                    <div class="story-card" data-index="7">
+                        <div class="story-card-inner">
+                            <div class="story-card-bg" style="background-image: url('photo_theme 6.png');"></div>
+                            <div class="story-card-content">
+                                <p class="story-card-label">The Finality</p>
+                                <h2 class="story-card-title">The Sky Remembers</h2>
+                                <div class="story-card-body">
+                                    <p>When the storm fades,</p>
+                                    <p>the sky remains.</p>
+                                    <p>Forever watching. Forever silent.</p>
+                                    <p>The chronicles end, but the myth begins.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════
+       SECTION 3 — CINEMATIC EXPANSION
+       Content visible by default — no opacity:0 dependency
+       ══════════════════════════════════════════ -->
+    <section id="s-expand" class="s s--expand" aria-label="Dragon storm — Dominion">
+
+        <div class="expand-bg" id="expand-bg">
+            <div class="expand-overlay"></div>
+        </div>
+
+        <div class="gradient-strips" aria-hidden="true">
+            <div class="gs gs--1"></div>
+            <div class="gs gs--2"></div>
+        </div>
+
+        <div class="bg-word bg-word--expand" aria-hidden="true">DOMINION</div>
+
+        <div class="expand-content">
+            <p class="label reveal-label">Act II — The Storm</p>
+            <h2 class="section-title">
+                <span class="word-wrap"><span class="word rw">Dominion</span></span>
+                <span class="word-wrap"><span class="word rw">of</span></span>
+                <br />
+                <span class="word-wrap"><em class="word rw">Wind</em></span>
+                <span class="word-wrap"><span class="word rw">&</span></span>
+                <span class="word-wrap"><em class="word rw">Scale</em></span>
+            </h2>
+            <div class="micro-line reveal-micro"></div>
+            <p class="section-body reveal-body">The sky itself bowed. Mountains crumbled at the weight of that gaze.
+                Only silence — and the slow curl of a serpent older than gods.</p>
+        </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+       SECTION 4 — FLOATING EYE
+       ══════════════════════════════════════════ -->
+    <section id="s-eye" class="s s--eye" aria-label="Dragon eye — The witness">
+
+        <div class="bg-word bg-word--eye" aria-hidden="true">WITNESS</div>
+        <canvas class="dust-canvas" id="dust-canvas" aria-hidden="true"></canvas>
+
+        <div class="eye-section-inner">
+
+            <div class="eye-frame" id="eye-frame">
+                <div class="eye-frame__inner">
+                    <img src="photo_theme 3.png" alt="A dragon's ancient crimson eye" loading="lazy" decoding="async" />
+                    <div class="eye-sweep" aria-hidden="true"></div>
+                    <div class="eye-caption">
+                        <span class="label">Act III — The Witness</span>
+                        <p>The Eye of Eternity</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eye-text reveal-block">
+                <p class="label reveal-label">Act III</p>
+                <h2 class="section-title">
+                    <span class="word-wrap"><span class="word rw">The</span></span>
+                    <span class="word-wrap"><span class="word rw">Eye</span></span>
+                    <br />
+                    <span class="word-wrap"><em class="word rw">Never</em></span>
+                    <span class="word-wrap"><em class="word rw">Forgets</em></span>
+                </h2>
+                <p class="section-body reveal-body" style="font-style:italic">"In stillness, he faced the
+                    infinite.<br />In silence, the infinite answered."</p>
+                <span class="quote-attr reveal-body">— The Chronicle of the Last Blade</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+       SECTION 5 — FINAL: QUIET DOMINANCE
+       ══════════════════════════════════════════ -->
+    <section id="s-final" class="s s--final" aria-label="Final — Quiet dominance">
+
+        <div class="final-bg" id="final-bg">
+            <img src="photo_theme 6.png" alt="A dragon dominates a storm-lit horizon" loading="lazy" decoding="async" />
+            <div class="final-vignette"></div>
+            <div class="final-fade-up"></div>
+        </div>
+
+        <div class="bg-word bg-word--final" aria-hidden="true">ETERNAL</div>
+
+        <div class="final-content">
+            <p class="label final-label reveal-label">The Final Act</p>
+            <h2 class="final-title reveal-block">
+                <em>When the Storm</em><br />Becomes the Sky
+            </h2>
+            <div class="final-accent reveal-accent"></div>
+            <p class="section-body final-body reveal-body">He did not conquer the dragons. He became the silence between
+                their roars — the stillness at the center of the eternal storm.</p>
+            <div class="final-cta reveal-body">
+                <span class="final-cta-line"></span>
+                <span class="final-cta-text">The chronicle continues</span>
+                <span class="final-cta-line"></span>
+            </div>
+        </div>
+
+    </section>
+
+    <audio id="ambient-audio" loop preload="none">
+        <source src="sound/background_sound.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="loader.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
