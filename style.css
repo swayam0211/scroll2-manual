@@ -555,6 +555,9 @@ img {
     grid-template-columns: repeat(9, 1fr);
     grid-template-rows: repeat(7, 1fr);
     perspective: 1500px;
+    background-image: url('upgrade/part-3.png');
+    background-size: cover;
+    background-position: center;
 }
 
 .expand-bg img {
@@ -568,11 +571,11 @@ img {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
 }
 
-.flip-box.is-flipped {
-    transform: rotateX(180deg);
+.flip-box:hover {
+    box-shadow: 0 0 15px rgba(0, 150, 255, 0.6), 0 0 15px rgba(255, 0, 50, 0.6);
 }
 
 .flip-face {
@@ -581,17 +584,23 @@ img {
     backface-visibility: hidden;
     background-size: 900% 700%;
     background-repeat: no-repeat;
+    transition: transform 0.8s cubic-bezier(0.32, 0, 0.67, 0), opacity 0.6s ease-in;
+}
+
+.flip-box.is-falling .flip-face {
+    transform: translateY(120vh) rotateZ(15deg) scale(0.9);
+    opacity: 0;
+}
+
+.flip-box.is-rising .flip-face {
+    transform: translateY(-120vh) rotateZ(-15deg) scale(0.9);
+    opacity: 0;
 }
 
 .flip-face--front {
     background-image: url('photo_theme 4.png');
     transform: scale(1.01);
     filter: brightness(0.57) contrast(1.07);
-}
-
-.flip-face--back {
-    background-image: url('upgrade/part-3.png');
-    transform: rotateX(180deg) scale(1.01);
 }
 
 .expand-overlay {
@@ -718,6 +727,40 @@ img {
 
 .eye-frame__inner:hover img {
     filter: brightness(0.82) contrast(1.06);
+}
+
+.eye-container {
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+}
+
+.eye-image {
+    position: relative;
+    z-index: 2;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.eye-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.eye-container.is-active .eye-image {
+    transform: rotateX(45deg) scale(0.9);
+    filter: blur(15px) brightness(0.3);
+    opacity: 0;
+}
+
+.eye-container.is-active .eye-video {
+    opacity: 1;
 }
 
 .eye-sweep {
@@ -1636,6 +1679,149 @@ img {
 
 .cloud-reveal.split .cloud-light-beam {
     opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════
+   VISITS PAGE (ACT IV) — EXACT PRESCRIBED RULES
+   ══════════════════════════════════════════════════════ */
+#visits-page {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Layer 1: Original background — fills the full section behind everything */
+.final-bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Layer 2: Three.js Canvas — hidden by default */
+#webgl-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    display: block;
+}
+
+/* Layer 3: UI Wrapper — always visible, centered on load */
+#ui-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    opacity: 1;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+}
+
+/* Entry Button — explicitly styled to always be visible */
+#enter-act-iv-btn {
+    padding: 18px 48px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#enter-act-iv-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.3);
+}
+
+/* Layer 4: Return Button — hidden until inside 3D world */
+#return-btn {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 100;
+    display: none;
+    padding: 12px 28px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#return-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.visits-title {
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 8vw, 90px);
+    letter-spacing: 12px;
+    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    font-weight: 300;
+    text-align: center;
+}
+
+.visits-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    padding: 20px 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+}
+
+.visits-btn:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.visits-btn-return {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+}
+
+.visits-btn-return:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .cloud-reveal.split .cloud-dust {

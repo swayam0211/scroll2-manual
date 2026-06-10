@@ -420,7 +420,10 @@
 
             <div class="eye-frame" id="eye-frame">
                 <div class="eye-frame__inner">
-                    <img src="photo_theme 3.png" alt="A dragon's ancient crimson eye" loading="lazy" decoding="async" />
+                    <div class="eye-container">
+                        <img src="photo_theme 3.png" alt="A dragon's ancient crimson eye" loading="lazy" decoding="async" class="eye-image" />
+                        <video class="eye-video" src="upgrade/veo4.mp4" muted playsinline></video>
+                    </div>
                     <div class="eye-sweep" aria-hidden="true"></div>
                     <div class="eye-caption">
                         <span class="label">Act III — The Witness</span>
@@ -447,32 +450,42 @@
     </section>
 
     <!-- ══════════════════════════════════════════
-       SECTION 5 — FINAL: QUIET DOMINANCE
+       SECTION 5 — VISITS PAGE (SPATIAL ENGINE)
        ══════════════════════════════════════════ -->
-    <section id="s-final" class="s s--final" aria-label="Final — Quiet dominance">
+    <section id="visits-page" class="s s--final" aria-label="Final — Quiet dominance">
 
-        <div class="final-bg" id="final-bg">
-            <img src="photo_theme 6.png" alt="A dragon dominates a storm-lit horizon" loading="lazy" decoding="async" />
-            <div class="final-vignette"></div>
-            <div class="final-fade-up"></div>
-        </div>
+        <!-- LAYER 1: Original background (sits behind everything) -->
+        <div class="final-bg-layer">
+            <div class="final-bg">
+                <img src="photo_theme 6.png" alt="A dragon dominates a storm-lit horizon" loading="lazy" decoding="async" />
+                <div class="final-vignette"></div>
+                <div class="final-fade-up"></div>
+            </div>
 
-        <div class="bg-word bg-word--final" aria-hidden="true">ETERNAL</div>
+            <div class="bg-word bg-word--final" aria-hidden="true">ETERNAL</div>
 
-        <div class="final-content">
-            <p class="label final-label reveal-label">The Final Act</p>
-            <h2 class="final-title reveal-block">
-                <em>When the Storm</em><br />Becomes the Sky
-            </h2>
-            <div class="final-accent reveal-accent"></div>
-            <p class="section-body final-body reveal-body">He did not conquer the dragons. He became the silence between
-                their roars — the stillness at the center of the eternal storm.</p>
-            <div class="final-cta reveal-body">
-                <span class="final-cta-line"></span>
-                <span class="final-cta-text">The chronicle continues</span>
-                <span class="final-cta-line"></span>
+            <div class="final-content">
+                <p class="label final-label reveal-label">The Final Act</p>
+                <h2 class="final-title reveal-block">
+                    <em>When the Storm</em><br />Becomes the Sky
+                </h2>
+                <div class="final-accent reveal-accent"></div>
+                <p class="section-body final-body reveal-body">He did not conquer the dragons. He became the silence between
+                    their roars — the stillness at the center of the eternal storm.</p>
             </div>
         </div>
+
+        <!-- LAYER 2: Three.js Canvas (hidden by default, sits on top of background) -->
+        <canvas id="webgl-canvas"></canvas>
+
+        <!-- LAYER 3: UI Wrapper (always visible on load, sits on top of everything) -->
+        <div id="ui-wrapper">
+            <h1 class="visits-title">DOMINION CHRONICLES</h1>
+            <button id="enter-act-iv-btn">STEP INTO ACT IV</button>
+        </div>
+
+        <!-- LAYER 4: Return Button (hidden until inside 3D world) -->
+        <button id="return-btn" style="display: none;">RETURN TO CHRONICLE</button>
 
     </section>
 
@@ -480,8 +493,11 @@
         <source src="sound/background_sound.mp3" type="audio/mpeg" />
     </audio>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="loader.js"></script>
     <script src="main.js"></script>
+    <script src="visits.js"></script>
 </body>
 
 </html>

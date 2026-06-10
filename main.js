@@ -583,17 +583,12 @@ function initGridFlip() {
             const front = document.createElement('div');
             front.className = 'flip-face flip-face--front';
             
-            const back = document.createElement('div');
-            back.className = 'flip-face flip-face--back';
-
             const posX = cols > 1 ? (c / (cols - 1)) * 100 : 0;
             const posY = rows > 1 ? (r / (rows - 1)) * 100 : 0;
 
             front.style.backgroundPosition = `${posX}% ${posY}%`;
-            back.style.backgroundPosition = `${posX}% ${posY}%`;
 
             box.appendChild(front);
-            box.appendChild(back);
 
             if (overlay) {
                 expandBg.insertBefore(box, overlay);
@@ -606,16 +601,18 @@ function initGridFlip() {
             box.addEventListener('mouseenter', () => {
                 if (isLocked) return;
 
+                box.style.transform = "translateY(-5px) translateX(" + (Math.random() * 20 - 10) + "px) rotateZ(" + (Math.random() * 30 - 15) + "deg)";
+
                 if (!isReversing) {
-                    if (!box.classList.contains('is-flipped')) {
-                        box.classList.add('is-flipped');
+                    if (!box.classList.contains('is-falling')) {
+                        box.classList.add('is-falling');
                         flippedCount++;
                         checkComplete();
                     }
                 } else {
-                    if (box.classList.contains('is-flipped')) {
-                        box.classList.remove('is-flipped');
-                        flippedCount--;
+                    if (!box.classList.contains('is-rising')) {
+                        box.classList.add('is-rising');
+                        flippedCount++;
                         checkComplete();
                     }
                 }
@@ -624,41 +621,67 @@ function initGridFlip() {
     }
 
     function checkComplete() {
-        if (!isReversing) {
-            if (flippedCount / totalBoxes >= 0.95) {
-                isLocked = true;
-                const unflipped = boxes.filter(b => !b.classList.contains('is-flipped'));
+        if (flippedCount / totalBoxes >= 0.95) {
+            isLocked = true;
+            
+            if (!isReversing) {
+                const unflipped = boxes.filter(b => !b.classList.contains('is-falling'));
                 unflipped.forEach((b, i) => {
                     setTimeout(() => {
-                        b.classList.add('is-flipped');
+                        b.style.transform = "translateY(-5px) translateX(" + (Math.random() * 20 - 10) + "px) rotateZ(" + (Math.random() * 30 - 15) + "deg)";
+                        b.classList.add('is-falling');
                     }, i * 50);
                 });
                 
                 setTimeout(() => {
                     isReversing = true;
-                    flippedCount = totalBoxes;
-                    isLocked = false;
+                    flippedCount = 0;
+                    boxes.forEach(b => {
+                        b.style.transform = '';
+                        b.classList.remove('is-falling');
+                    });
+                    setTimeout(() => { isLocked = false; }, 800);
                 }, unflipped.length * 50 + 800);
-            }
-        } else {
-            if ((totalBoxes - flippedCount) / totalBoxes >= 0.95) {
-                isLocked = true;
-                const flipped = boxes.filter(b => b.classList.contains('is-flipped'));
-                flipped.forEach((b, i) => {
+            } else {
+                const unflipped = boxes.filter(b => !b.classList.contains('is-rising'));
+                unflipped.forEach((b, i) => {
                     setTimeout(() => {
-                        b.classList.remove('is-flipped');
+                        b.style.transform = "translateY(-5px) translateX(" + (Math.random() * 20 - 10) + "px) rotateZ(" + (Math.random() * 30 - 15) + "deg)";
+                        b.classList.add('is-rising');
                     }, i * 50);
                 });
                 
                 setTimeout(() => {
                     isReversing = false;
                     flippedCount = 0;
-                    isLocked = false;
-                }, flipped.length * 50 + 800);
+                    boxes.forEach(b => {
+                        b.style.transform = '';
+                        b.classList.remove('is-rising');
+                    });
+                    setTimeout(() => { isLocked = false; }, 800);
+                }, unflipped.length * 50 + 800);
             }
         }
     }
 }
 
+function initEyeAnimation() {
+    const eyeContainer = document.querySelector('.eye-container');
+    const eyeVideo = document.querySelector('.eye-video');
+
+    if (eyeContainer && eyeVideo) {
+        eyeContainer.addEventListener('mouseenter', () => {
+            eyeContainer.classList.add('is-active');
+            eyeVideo.currentTime = 0;
+            eyeVideo.play();
+        });
+
+        eyeContainer.addEventListener('mouseleave', () => {
+            eyeContainer.classList.remove('is-active');
+            eyeVideo.pause();
+        });
+    }
+}
+
 window.addEventListener('resize', () => { reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches; }, { passive: true });
-document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => { init(); initGridFlip(); }) : (init(), initGridFlip());
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => { init(); initGridFlip(); initEyeAnimation(); }) : (init(), initGridFlip(), initEyeAnimation());
