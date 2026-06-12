@@ -8,6 +8,9 @@
  */
 'use strict';
 
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+window.addEventListener('beforeunload', () => { window.scrollTo(0, 0); });
+
 const INERTIA = 0.075;
 const SLICE_N = 5;
 const SLICE_RADIUS = 26;

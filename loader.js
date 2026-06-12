@@ -216,12 +216,16 @@
                 cloudReveal.classList.add('split');
 
                 // Once clouds start splitting, allow body scrolling
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 document.body.classList.remove('loading');
+                if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
 
             }, 1200);
         } else {
             // Fallback if no cloud reveal
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             document.body.classList.remove('loading');
+            if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
         }
     }
 

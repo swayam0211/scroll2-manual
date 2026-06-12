@@ -1550,6 +1550,11 @@ img {
     pointer-events: auto;
 }
 
+.cloud-img {
+    /* 👇 THIS IS THE MAGIC LINE 👇 */
+    mix-blend-mode: screen;
+}
+
 .cloud-bg-color {
     position: absolute;
     inset: 0;
@@ -1857,4 +1862,119 @@ img {
 .cloud-reveal.split .layer-fg.layer-right {
     transform: translateX(160%) translateY(-5%) scale(1.1);
     opacity: 0;
+}
+
+/* ==================================================
+   ORIGAMI REVEAL OVERLAY (DOMINION CHRONICLES)
+   ================================================== */
+#origami-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    /* Ensure it covers everything on the final page */
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    pointer-events: none;
+    /* Let clicks pass through once revealed */
+    overflow: hidden;
+    /* Prevent falling blocks from stretching the page */
+}
+
+.origami-block {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.origami-half {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #050505;
+    backface-visibility: hidden;
+    /* Add a slight scale to prevent tiny pixel gaps between blocks */
+    transform: scale(1.02);
+}
+
+/* TYPE 1: Top-Left to Bottom-Right Diagonal Fold */
+.origami-block.type-1 .half-base {
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    /* Bottom-Left triangle */
+}
+
+.origami-block.type-1 .half-fold {
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+    /* Top-Right triangle */
+    transform-origin: center;
+}
+
+/* TYPE 2: Top-Right to Bottom-Left Diagonal Fold */
+.origami-block.type-2 .half-base {
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    /* Bottom-Right triangle */
+}
+
+.origami-block.type-2 .half-fold {
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    /* Top-Left triangle */
+    transform-origin: center;
+}
+
+.origami-half.active-fold {
+    z-index: 10;
+}
+
+.fold-highlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    /* Animated by GSAP */
+}
+
+/* Diagonal gradient for the specular highlight along the hinge */
+.origami-block.type-1 .fold-highlight {
+    background: linear-gradient(225deg, transparent 40%, rgba(255, 255, 255, 0.9) 50%, transparent 60%);
+}
+
+.origami-block.type-2 .fold-highlight {
+    background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.9) 50%, transparent 60%);
+}
+
+.crease-glow {
+    position: absolute;
+    width: 6px;
+    height: 142%;
+    /* sqrt(2) * 100% to cover the diagonal */
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    /* Animated by GSAP */
+    pointer-events: none;
+    z-index: 15;
+}
+
+/* Position the diagonal line */
+.origami-block.type-1 .crease-glow {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.origami-block.type-2 .crease-glow {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Outer Border Purple Glow */
+.origami-block.is-glowing {
+    filter: drop-shadow(0 0 5px #a855f7) drop-shadow(0 0 15px #8a2be2);
+    z-index: 10;
 }

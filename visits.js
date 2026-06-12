@@ -1,5 +1,10 @@
 // visits.js — AAA Spatial Storytelling Engine
 
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+window.scrollTo(0, 0);
+
+gsap.registerPlugin(ScrollTrigger);
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // ─── 1. DOM REFERENCES (matching exact IDs from index.html) ───
@@ -272,6 +277,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Everything starts at its natural CSS state (ui-wrapper: opacity 1, canvas: opacity 0).
 
     enterBtn.addEventListener('click', () => {
+        // KILL SWITCH FOR ORIGAMI
+        gsap.killTweensOf('.origami-block');
+        gsap.killTweensOf('.half-fold');
+        gsap.killTweensOf('.fold-highlight');
+        gsap.killTweensOf('.crease-glow');
+        const overlay = document.getElementById('origami-overlay');
+        if (overlay) {
+            gsap.to(overlay, { opacity: 0, duration: 0.3, onComplete: () => overlay.remove() });
+        }
+
         // Lock document scrolling
         document.body.style.overflow = 'hidden';
 
@@ -370,3 +385,160 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+/**
+ * ORIGAMI FOLD & DROP REVEAL
+ * Isolated GSAP Logic for the Dominion Chronicles overlay
+ */
+function initOrigamiReveal() {
+    const section = document.querySelector('#visits-page');
+    if (!section) return;
+
+    // 1. Create the overlay container
+    const overlay = document.createElement('div');
+    overlay.id = 'origami-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    // Ensure visibility, extreme z-index, and no click-blocking
+    overlay.style.position = "absolute";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.zIndex = "9999";
+    overlay.style.setProperty("pointer-events", "none", "important");
+
+    // Ensure parent is position: relative so absolute overlay works properly
+    if (window.getComputedStyle(section).position === 'static') {
+        section.style.position = 'relative';
+    }
+    section.appendChild(overlay);
+
+    // 2. Generate the 64 (8x8) matrix blocks
+    const blocks = [];
+    for (let i = 0; i < 64; i++) {
+        const block = document.createElement('div');
+        // Randomly assign fold axis type (1 or 2)
+        const type = Math.random() > 0.5 ? 'type-1' : 'type-2';
+        block.className = `origami-block ${type}`;
+
+        const halfBase = document.createElement('div');
+        halfBase.className = 'origami-half half-base';
+
+        const halfFold = document.createElement('div');
+        halfFold.className = 'origami-half half-fold';
+
+        const highlight = document.createElement('div');
+        highlight.className = 'fold-highlight';
+        halfFold.appendChild(highlight);
+
+        const creaseGlow = document.createElement('div');
+        creaseGlow.className = 'crease-glow';
+
+        block.appendChild(halfBase);
+        block.appendChild(halfFold);
+        block.appendChild(creaseGlow);
+        overlay.appendChild(block);
+        blocks.push(block);
+    }
+
+    console.log("Origami Overlay Built");
+
+    // Utility to shuffle an array
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
+    // 3. Setup the GSAP ScrollTrigger timeline
+    let tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '#visits-page',
+            start: "top 60%", // Trigger when the section comes well into viewport
+            onEnter: () => {
+                console.log("Origami Trigger Fired");
+                tl.restart();
+            },
+            onLeave: () => resetGrid(),
+            onLeaveBack: () => resetGrid()
+        },
+        paused: true
+    });
+
+    const resetGrid = () => {
+        tl.pause(0); // Reset timeline to beginning
+        gsap.set(['.origami-block', '.half-fold', '.crease-glow', '.fold-highlight'], { clearProps: "all", opacity: 1, rotationX: 0, rotationY: 0, rotationZ: 0, y: 0 });
+        document.querySelectorAll('.half-fold').forEach(el => el.classList.remove('active-fold'));
+        document.querySelectorAll('.origami-block').forEach(el => el.classList.remove('is-glowing'));
+    };
+
+    // 4. Build the batched animation sequence
+    const shuffledBlocks = shuffleArray([...blocks]);
+    const batchSize = 8;
+
+    for (let i = 0; i < shuffledBlocks.length; i += batchSize) {
+        const batch = shuffledBlocks.slice(i, i + batchSize);
+
+        // Stagger position within the timeline
+        const position = i === 0 ? "+=0" : "-=0.2"; // Slight overlap between batches
+        const label = "batch" + i;
+        tl.addLabel(label, position);
+
+        batch.forEach(block => {
+            const type = block.classList.contains('type-1') ? 1 : 2;
+            const foldHalf = block.querySelector('.half-fold');
+            const highlight = foldHalf.querySelector('.fold-highlight');
+            const creaseGlow = block.querySelector('.crease-glow');
+
+            // Determine rotation based on type to fold along the diagonal
+            // Type 1: TL to BR fold. Rotate around diagonal.
+            // Type 2: TR to BL fold. Rotate around diagonal.
+            const rotX = type === 1 ? 180 : 180;
+            const rotY = type === 1 ? -180 : 180;
+
+            // Step A: Add active class exactly at the batch label
+            tl.call(() => {
+                foldHalf.classList.add('active-fold');
+                block.classList.add('is-glowing');
+            }, null, label);
+
+            // Step A2: Animate dynamic lighting and unclippable glow
+            tl.to(highlight, {
+                opacity: 0.8,
+                duration: 0.6,
+                ease: "power2.inOut"
+            }, label);
+
+            tl.to(creaseGlow, {
+                opacity: 1,
+                duration: 0.6,
+                ease: "power2.inOut"
+            }, label);
+
+            // Step B: Fold the half strictly at the batch label
+            tl.to(foldHalf, {
+                rotationX: rotX,
+                rotationY: rotY,
+                duration: 0.6,
+                ease: "power2.inOut"
+            }, label);
+
+            // Step C: Drop the whole block down with gravity
+            tl.to(block, {
+                y: window.innerHeight * 1.5, // Drop past the screen
+                rotationZ: gsap.utils.random(-45, 45), // Random slight spin
+                duration: 0.8,
+                ease: "power1.in"
+            }, `${label}+=0.5`); // Start drop slightly before fold completes
+        });
+    }
+}
+
+// Execution Timing (Race Condition Fix)
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initOrigamiReveal);
+} else {
+    initOrigamiReveal();
+}
